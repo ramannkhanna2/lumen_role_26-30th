@@ -1,0 +1,8 @@
+---
+# handlers file for raman_role
+- name: Restart network
+  cisco.ios.ios_command:
+    commands:
+      - "write memory"
+      - "reload"
+  timeout: 300  # Increase timeout to 300 seconds (5 minutes)

@@ -1,0 +1,43 @@
+---
+# tasks file for raman_role
+#- name: "Include backup role if user is network_admin"
+#  include_role:
+#    name: backup_config
+#  when: ansible_user == "network_admin"
+
+
+- name: "Check if {{ interface1 }} is present"
+  cisco.ios.ios_command:
+    commands: show ip interface brief
+  register: interface_status
+
+- name: "Configure interface {{ interface1 }}"
+  cisco.ios.ios_interfaces:
+    config:  
+      - name: "{{ interface1 }}"
+        description: "Configured by {{ ansible_user }} "
+        enabled: yes
+    state: merged
+  when: "'GigabitEthernet1' in interface_status.stdout[0]"
+  notify: Restart network
+
+- name: "Configure interface {{ interface2 }} if present"
+  cisco.ios.ios_interfaces:
+    config:
+      - name: "{{ interface2 }}"
+        description: "Configured by Ansible"
+        enabled: yes
+    state: merged
+  when: "'GigabitEthernet2' in interface_status.stdout[0]"
+  notify: Restart network
+
+- name: Get interface descriptions
+  cisco.ios.ios_command:
+    commands:
+      - show interfaces description
+  register: interface_descriptions
+
+- name: Display interface descriptions
+  debug:
+    msg: "{{ interface_descriptions.stdout[0] }}"
+

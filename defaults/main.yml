@@ -1,0 +1,3 @@
+---
+# defaults file for raman_role
+ansible_user: "default_user"

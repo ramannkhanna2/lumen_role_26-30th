@@ -1,0 +1,4 @@
+---
+# vars file for raman_role
+interface1: GigabitEthernet1
+interface2: GigabitEthernet2
